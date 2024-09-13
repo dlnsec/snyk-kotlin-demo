@@ -1,0 +1,62 @@
+name: Snyk for Kotlin GitHub Action
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  security:
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout code
+      - uses: actions/checkout@v4
+
+      # Setup JDK 21 for Gradle to support Snyk Action
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: "21"
+          distribution: "adopt" # See 'Supported distributions' for available options
+
+      # Run Gradle wrapper to generate required gradle-wrapper.jar
+      - name: Run Gradle wrapper to generate gradle-wrapper.jar
+        run: gradle wrapper
+
+      # Install Snyk CLI
+      - name: Install Snyk CLI
+        run: npm install -g snyk
+    
+      # Check Snyk CLI version
+      - name: Check Snyk CLI version
+        run: snyk --version
+
+      # Run Snyk on project
+      # exit code 0: No vulnerabilities found
+      # exit code 1: Vulnerabilities found
+      # exit code 2: An error occurerd
+      - name: Run Snyk on project
+        run: snyk test --file=app/build.gradle.kts --severity-threshold=medium --sarif-file-output=_snyk_report.sarif
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        continue-on-error: true # Snyk exits with a non-zero code, we want to skip this and generate sarif report
+
+      # Install jq to parse Snyk report
+      - name: Install jq
+        run: sudo apt-get install jq
+
+      # Replace security-severity undefined for license-related findings known issue with Snyk Action
+      - name: Replace security-severity undefined for license-related findings 
+        run: |
+          jq 'walk(if type == "object" and .["security-severity"] == "undefined" then .["security-severity"] = "0" else . end)' _snyk_report.sarif > snyk_report.sarif
+
+      # Upload sarif results to GitHub
+      - name: Upload sarif results to GitHub
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: snyk_report.sarif
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
