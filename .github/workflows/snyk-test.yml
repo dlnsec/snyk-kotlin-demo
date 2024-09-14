@@ -1,4 +1,4 @@
-name: Snyk for Kotlin GitHub Action
+name: Snyk Code Scanning Security Analysis
 
 on:
   push:
