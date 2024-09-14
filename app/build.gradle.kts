@@ -23,7 +23,7 @@ dependencies {
     // Include vulnerable dependencies for Snyk test purposes
     implementation("org.springframework:spring-core:4.3.0.RELEASE")
     implementation("com.fasterxml.jackson.core:jackson-databind:2.8.0")
-    implementation("commons-collections:commons-collections:3.2.1")
+    implementation("commons-collections:commons-collections:3.2.0")
 
     // Use the Kotlin JUnit 5 integration.
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
