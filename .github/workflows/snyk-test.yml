@@ -26,6 +26,14 @@ jobs:
       - name: Run Gradle wrapper to generate gradle-wrapper.jar
         run: gradle wrapper
 
+      # Install Gradle dependencies
+      - name: Install Gradle dependencies
+        run: ./gradlew build --no-daemon
+
+      # List installed dependencies
+      - name: List installed dependencies
+        run: ./gradlew dependencies
+
       # Install Snyk CLI
       - name: Install Snyk CLI
         run: npm install -g snyk
