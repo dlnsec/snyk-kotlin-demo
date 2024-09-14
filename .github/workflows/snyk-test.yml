@@ -50,7 +50,7 @@ jobs:
         run: snyk test --file=app/build.gradle.kts --severity-threshold=medium --sarif-file-output=_snyk_report.sarif
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-        continue-on-error: true # Snyk exits with a non-zero code, we want to skip this and generate sarif report
+        continue-on-error: false # fail on exit code 2
 
       # Install jq to parse Snyk report
       - name: Install jq
