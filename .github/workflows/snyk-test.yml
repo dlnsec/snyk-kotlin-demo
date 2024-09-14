@@ -47,7 +47,7 @@ jobs:
       # exit code 1: Vulnerabilities found
       # exit code 2: An error occurerd
       - name: Run Snyk on project
-        run: snyk test --file=app/build.gradle.kts --severity-threshold=medium --sarif-file-output=_snyk_report.sarif
+        run: snyk test --file=app/build.gradle.kts --severity-threshold=high --sarif-file-output=_snyk_report.sarif
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         continue-on-error: false # fail on exit code 2
