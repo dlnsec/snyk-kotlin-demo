@@ -19,6 +19,14 @@ repositories {
 }
 
 dependencies {
+
+    /*
+     * Include vulnerable Log4j dependencies for Snyk testing
+     * https://logging.apache.org/security.html
+     */
+    
+    implementation("org.apache.logging.log4j:log4j-core:2.3.2") // CVE-2021-44832
+
     // Use the Kotlin JUnit 5 integration.
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
 
